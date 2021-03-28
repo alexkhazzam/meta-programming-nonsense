@@ -1,19 +1,15 @@
-// Library land
-const uid = Symbol("uid"); // "uid" is simply for console logging purposes
+const uid = Symbol("uid");
 
 const user = {
-  //   id: "p1",
   [uid]: "p1",
   name: "Alex",
   age: 16,
   [Symbol.toStringTag]: "User Object",
 };
 
-user[uid] = "p2"; // Defining Symbol in library ONLY => users will not be able to find the variable
+user[uid] = "p2";
 
-// app land => Using library
-
-user.id = "p2"; // this should not be possible
+user.id = "p2";
 console.log(user.toString());
 
 const company = {
@@ -22,7 +18,7 @@ const company = {
   [Symbol.iterator]: function* employeeGenerator() {
     let currentEmployee = 0;
     while (currentEmployee < this.employees.length) {
-      yield this.employees[currentEmployee]; // Return value of next() method
+      yield this.employees[currentEmployee];
       currentEmployee++;
     }
   },
@@ -40,3 +36,24 @@ Reflect.setPrototypeOf(course, {
 
 console.log(course.toString());
 Reflect.deleteProperty(course, "title");
+
+const courseHandler = {
+  get(obj, propertyName) {
+    console.log(propertyName);
+    return obj[propertyName] || "NOT FOUND";
+  },
+  set(obj, propertyName, newValue) {
+    if (propertyName === "rating") {
+      return;
+    }
+    obj[propertyName] = newValue;
+  },
+};
+
+const pCourse = new Proxy(course, courseHandler);
+console.log(pCourse.title, pCourse.length);
+pCourse.rating = 5;
+
+const obj = {
+  name: "alex",
+};
