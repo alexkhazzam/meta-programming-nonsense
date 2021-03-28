@@ -22,12 +22,21 @@ const company = {
   [Symbol.iterator]: function* employeeGenerator() {
     let currentEmployee = 0;
     while (currentEmployee < this.employees.length) {
-      yield this.employees[currentEmployee];
+      yield this.employees[currentEmployee]; // Return value of next() method
       currentEmployee++;
     }
   },
 };
 
-for (const employee of company) {
-  console.log(employee);
-}
+const course = {
+  title: "rubberDuck",
+};
+
+Reflect.setPrototypeOf(course, {
+  toString() {
+    return this.title;
+  },
+});
+
+console.log(course.toString());
+Reflect.deleteProperty(course, "title");
